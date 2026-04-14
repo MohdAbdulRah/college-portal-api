@@ -22,7 +22,21 @@ builder.Services.AddControllers();
 
 // ══════════════════ JWT Authentication ══════════════════
 var jwtSettings = builder.Configuration.GetSection("Jwt");
-var secretKey = Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]!);
+
+// Read SecretKey: try config section first, then direct env var (Render Docker fallback)
+var secretKeyStr = jwtSettings["SecretKey"]
+    ?? Environment.GetEnvironmentVariable("Jwt__SecretKey")
+    ?? Environment.GetEnvironmentVariable("JWT_SECRET_KEY")
+    ?? throw new InvalidOperationException(
+        "JWT SecretKey is not configured. Set the 'Jwt__SecretKey' environment variable on Render.");
+
+var jwtIssuer = jwtSettings["Issuer"]
+    ?? Environment.GetEnvironmentVariable("Jwt__Issuer") ?? "CollegePortal.API";
+
+var jwtAudience = jwtSettings["Audience"]
+    ?? Environment.GetEnvironmentVariable("Jwt__Audience") ?? "CollegePortal.Client";
+
+var secretKey = Encoding.UTF8.GetBytes(secretKeyStr);
 
 builder.Services.AddAuthentication(options =>
 {
@@ -37,8 +51,8 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = jwtSettings["Issuer"],
-        ValidAudience = jwtSettings["Audience"],
+        ValidIssuer = jwtIssuer,
+        ValidAudience = jwtAudience,
         IssuerSigningKey = new SymmetricSecurityKey(secretKey),
         ClockSkew = TimeSpan.Zero
     };

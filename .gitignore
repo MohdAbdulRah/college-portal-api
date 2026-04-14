@@ -1,0 +1,58 @@
+## Build results
+bin/
+obj/
+
+## Visual Studio files
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Rider / VS Code
+.idea/
+.vscode/
+
+## Logs
+*.log
+
+## OS files
+.DS_Store
+Thumbs.db
+
+## Environment variables
+.env
+
+## App settings (IMPORTANT - contains secrets)
+appsettings.json
+appsettings.Development.json
+appsettings.Production.json
+
+## Entity Framework
+Migrations/*
+
+## Publish output
+publish/
+wwwroot/
+
+## Node (if frontend included)
+node_modules/
+
+## Package files
+*.nupkg
+
+## Test results
+TestResults/
+
+## Coverage reports
+coverage/
+
+## Docker
+docker-compose.override.yml
+
+## Secrets
+secrets.json
+
+## PostgreSQL local data (if any)
+*.sql
+*.dump
